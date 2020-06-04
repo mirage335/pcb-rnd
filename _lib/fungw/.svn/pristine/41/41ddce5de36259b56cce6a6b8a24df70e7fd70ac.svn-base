@@ -1,0 +1,62 @@
+digraph model
+{
+	subgraph cluster_0 {
+		label = "application code";
+		bgcolor = "#FFDDDD"
+
+		subgraph cluster_1 {
+			label = "fgw_ctx_t *context1";
+			bgcolor = "#DDFFDD"
+			subgraph cluster_1a {
+				bgcolor = "#DDDDFF"
+				label = "fgw_obj_t *obj1\n(e.g. foo.awk, engine: fungw_fawk)"
+				funca1  [label="awk function: foo()"]
+				funca2  [label="awk function: bar()"]
+				funca3  [label="awk function: baz()"]
+				statea1 [label="internal states\n(e.g. global variables\nof the script)"]
+			}
+
+			subgraph cluster_1b {
+				bgcolor = "#DDDDFF"
+				label = "fgw_obj_t *obj2\n(e.g. hello.lua, engine: fungw_lua)"
+				funcb1  [label="lua function: hello_world()"]
+				funcb2  [label="lua function: baz()"]
+				stateb1 [label="internal states\n(e.g. global variables\nof the script)"]
+			}
+		}
+
+		subgraph cluster_2 {
+			label = "fgw_ctx_t *context2";
+			bgcolor = "#DDFFDD"
+			subgraph cluster_2a {
+				bgcolor = "#DDDDFF"
+				label = "fgw_obj_t *obj1\n(e.g. bar.lua, engine: fungw_lua)"
+				funcc2  [label="lua function: foo()"]
+				statec2 [label="internal states\n(e.g. global variables\nof the script)"]
+			}
+
+			subgraph cluster_2b {
+				bgcolor = "#DDDDFF"
+				label = "fgw_obj_t *obj2\n(e.g. hello.lua, engine: fungw_lua)"
+				funcd1  [label="lua function: hello_world()"]
+				funcd2  [label="lua function: baz()"]
+				stated1 [label="internal states\n(e.g. global variables\nof the script)"]
+			}
+
+		}
+	}
+
+	funca1->funca2 [style=invis]
+	funca2->funca3 [style=invis]
+	funca3->statea1 [style=invis]
+
+	funcb1->funcb2 [style=invis]
+	funcb2->stateb1 [style=invis]
+
+	funcc2->statec2 [style=invis]
+
+
+	funcd1->funcd2 [style=invis]
+	funcd2->stated1 [style=invis]
+
+}

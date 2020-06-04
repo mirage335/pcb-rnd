@@ -1,0 +1,66 @@
+<html>
+<body>
+
+<h1> fungw language bindings - perl </h1>
+
+<h2> datasheet </h2>
+<p>
+<table border=1 cellspacing=0>
+	<tr> <th> tested on
+		<td> Debian (libperl 5.22, 5.24, 5.26), gentoo (libperl 5.26)
+	<tr> <th> known bugs/limitations
+		<td> none
+	<tr> <th> API stability
+		<td> <a href="#api">moderate</a> (prefer other languages) 
+	<tr> <th> configuration requirements
+		<td> Must <a href="#conf">enable ithreads</a>
+
+</table>
+
+<h2> Details </h2>
+
+<h3 id="api"> API hacks </h3>
+<p>
+Required major hacks because the perl API doesn't support storing caller
+context. It is also impossible to register a perl variable for this purpose
+between init and script load. The current solution is using an unused
+field of the perl interpreter struct, which may not be the most stable
+soltuion long term.
+
+<h3 id="conf"> configuration </h3>
+<p>
+On Debian, ithread is enabled by default by the packaging. If you
+compile perl from source, you probably need to enable it by hand. Readme.irix
+suggests running Configure with -Duseithreads.
+<p>
+Karl's comments on enabling ithreads on gentoo:
+<pre>
+Doing the things below (in gentoo) makes that so:
+
+  the magic, add ithreads support to perl:
+# echo dev-lang/perl ithreads > /etc/portage/package.use/perl
+
+  rebuilding perl (-aqv is not nessesary):
+# emerge -aqv perl
+[ebuild   R   ] dev-lang/perl-5.26.9999  USE="berkdb gdbm ithreads* -debug -doc" 
+...
+
+Here comes a warning that you must rebuild all things perl (not perl
+itself which was rebuild above), which is done with the perl-cleaner
+thing below.
+
+  I got what was requested:
+$ perl -V | grep PERL_IMPLICIT_CONTEXT 
+    PERL_IMPLICIT_CONTEXT
+
+  cleaning upp the mess:
+# perl-cleaner --modules ; perl-cleaner --force --libperl
+[ rebuilding 100+ packages...]
+
+It seems that "ithreads" is per default off.
+
+</pre>
+
+
+</body>
+</html>

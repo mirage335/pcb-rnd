@@ -1,0 +1,29 @@
+<html>
+<body>
+
+<h1> fungw language bindings - python3 </h1>
+
+<h2> datasheet </h2>
+<p>
+<table border=1 cellspacing=0>
+	<tr> <th> tested on
+		<td> Debian (python 3.7.3)
+	<tr> <th> known bugs/limitations
+		<td> steals signal handlers and strings are PyBytes
+	<tr> <th> API stability
+		<td> <a href="#api">low</a>
+	<tr> <th> configuration requirements
+		<td> n/a
+</table>
+<b>Python3 is not recommended for scripting. </b>
+
+<h2> Details </h2>
+<p id="#api">
+Python3 removed PyString but memory management breaks with PyUnicode so
+fungw has to use PyBytes which is probably unconvenient.
+<p>
+Python3 takes over signal handling which is usually incompatible with the
+application it is running in.
+
+</body>
+</html>

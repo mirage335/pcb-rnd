@@ -1,0 +1,13 @@
+put /local/fungw/mod {fungw_duktape}
+put /local/fungw/mod_dir {duktape}
+switch ?libs/script/duktape/presents
+	case {true}
+		put /local/fungw/mod_cflags libs/script/duktape/cflags
+		put /local/fungw/mod_ldflags libs/script/duktape/ldflags
+		put /local/fungw/mod_src {fungw_duktape.c}
+		include {Plugin.tmpasm}
+	end
+	default
+		include {Disable.tmpasm}
+	end
+end

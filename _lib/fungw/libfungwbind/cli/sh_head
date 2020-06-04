@@ -1,0 +1,71 @@
+### header pasted by fungw
+fgw_ok()
+{
+	echo "ok" >&4
+}
+
+fgw_func_reg()
+{
+	local res
+	echo "fgw_func_reg $1" >&4
+	read res <&3
+	if test "$res" = "fr_ok"
+	then
+		return 0
+	else
+		return 1
+	fi
+}
+
+fgw()
+{
+	local fn cmd arg
+
+	echo "call_begin $#" >&4
+	fn="$1"
+	shift 1
+	while test $# -gt 0
+	do
+#TODO: quote
+		echo "call_arg $1" >&4
+		shift 1
+	done
+	echo "call_end $fn" >&4
+
+	# read the result
+	read cmd arg <&3
+	if test "$cmd" = "retok"
+	then
+		echo "$arg"
+		return 0
+	else
+		echo ""
+		return 1
+	fi
+}
+
+
+fgw_main_loop()
+{
+	local cmd arg call
+	fgw_ok
+	while read cmd arg <&3
+	do
+		case "$cmd" in
+			call_begin) call="" ;;
+			call_arg) call="$call \"$arg\"" ;;
+			call_end)
+				call="$arg$call"
+				fgw_retval=""
+				echo "call=$call"
+				eval "$call"
+				if test $? = 0
+				then
+					echo "retok $fgw_retval" >&4
+				else
+					echo "retfail" >&4
+				fi
+				;;
+		esac
+	done
+}

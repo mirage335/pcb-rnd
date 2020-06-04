@@ -1,0 +1,4 @@
+svn co svn://repo.hu/genht/trunk genht
+svn co svn://repo.hu/fungw/trunk fungw
+
+#http://repo.hu/projects/pcb-rnd/releases/

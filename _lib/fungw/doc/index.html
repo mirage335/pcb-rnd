@@ -1,0 +1,58 @@
+<html>
+<body>
+<h1> fungw - function gateway </h1>
+<p>
+Fungw is a tiny, portable library written in C (C89) that manages
+dynamic function calls across different programming languages.
+For this, fungw provides:
+<ul>
+	<li> a simplistic scalar data type abstraction, supporting the most common types
+	<li> semi-automatic conversion between data types
+	<li> <a href="model.html"> contexts that can host objects; objects can host named functions </a>
+	<li> a set of optional language bindings to the most popular <a href="lang.html">scripting languages</a>
+</ul>
+<p>
+The main use of fungw is to provide the host application a framework where
+dynamic parts of the code (e.g. plugins) can register their calls, allowing
+app-plugin, plugin-app, and plugin-plugin calls.
+<p>
+The second main use is doing all this in a language-agnostic way: any part
+of the code can be implemented in any of the numerous supported scripting
+languages (such as awk or lua). The caller of a function doesn't need to know
+what language the function is implemented in.
+<p>
+The main property of fungw is <b>simplicity</b>. The only API between
+objects is the <a href="model.html#calls">plain old function call mechanism</a>.
+
+<h1> What fungw can do </h1>
+<p>
+<ul>
+	<li> register your named functions
+	<li> convert data types if the caller and callee don't use (or don't even support)
+	     the same types
+	<li> embed and run scripts written in various scripting languages using
+	     a simple, unified, function call based interface - for an application
+	     developer this means code for scripting once and be able to use
+	     any of the languages available now or in the future
+	<li> scripting without having to generate language-dependent wrappers
+	<li> multiple scripts can be loaded and ran in parallel without interference
+</ul>
+
+<h1> What fungw can not do </h1>
+<p>
+<ul>
+	<li> it does not offer anything else but function calls - no access to
+	     variables or advanced features of OOP scripts
+	<li> fungw is not OOP - it manipulates flat list of objects and function calls;
+	     there's no inheritance, friend classes or any other OOP concept
+	<li> it doesn't load, unload or manage plugins; that should be done by
+	     a different library, e.g. <a href="http://repo.hu/projects/puplug"> puplug </a>
+</ul>
+
+<h1> Download & contact </h1>
+<p>
+<ul>
+	<li> source, latest development version from VCS: svn://repo.hu/fungw/trunk
+	<li> source, <a href="releases/"> release tarballs </a>
+	<li> contact the author: <a href="http://igor2.repo.hu/contact.html"> IRC or chat </a>
+</ul>

@@ -1,0 +1,60 @@
+<html>
+<body>
+<h1> How to get your favorite language supported by fungw </h1>
+
+<h2> requirements </h2>
+<p>
+First find an implementation, preferably a reusable lib, and
+check if it meets the requirements:
+<ul>
+	<li> must be an interpreted language (it can feature its own VM, most languages do, but it shouldn't try to create a native host system executable)
+	<li> must feature a free/open source lib implementation with reasonable dependencies
+	<li> must offer a C API (having a C++ API is not enough)
+	<li> must support loading and executing multiple independent scripts in parallel
+	<li> must support loading and unloading scripts any time
+	<li> must support function calls between the host application and the script in both direction
+	<li> the API must be strong enough to support storing context pointers (see below)
+</ul>
+
+<h2> option 1: request </h2>
+<p>
+Request language support by sending a mail to: fungw (at) igor2.repo.hu
+<p>
+Please include the name of the scripting language, the name of the interpreter
+library you think is suitable for the job, the URL for the lib.
+<p>
+If you are a programmer, please consider option 2 for faster inclusion.
+
+<h2> option 2: craft an example </h2>
+<p>
+To help the process, you should write an example program.
+The example code must be placed in the public domain so code can be copied into
+fungw without affecting the license. The example should include:
+<ol> 
+	<li> a test script which implements <b>exactly the same</b> as any hello.* script under trunk/example
+	<li> a C program, that demonstrates:
+		<ol>
+			<li> how to init the lib and a script context
+			<li> how to store and retrieve a C pointer in the script context
+			<li> how register C functions (with multiple arguments and a return value) in the script context, <b>before</b> loading a script
+			<li> how the C function figures the function name that's being called (dispatched functions)
+			<li> how the C function figures the script context the call came from
+			<li> how to load and parse a script; how to execute the main part of a script
+			<li> how to call a function of the script by name, with multiple arguments, acquiring the return value
+			<li> how to uninit the lib and the script context
+		</ol>
+</ol>
+<p>
+When writing the example C program, please try to be as simple as possible:
+<ul>
+	<li> prefer to use C89 (with gcc, compile with -std=c89 -pedantic)
+	<li> do not demonstrate any feature not requested above - fungw will not use
+	     anything more, so extras packed in the example are only noise that has
+	     to be ignored in the fungw implementation
+	<li> the example program doesn't need to know anything about fungw, only about
+	     the script language lib; it should be just a simple, single-source-file,
+	     standalone executable
+	<li> the example program doesn't need to be able to load and run the
+	     example script requested above, but a script that it can run must
+	     be supplied.
+</ul>

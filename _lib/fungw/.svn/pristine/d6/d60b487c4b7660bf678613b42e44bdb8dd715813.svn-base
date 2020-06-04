@@ -1,0 +1,14 @@
+put /local/fungw/mod {fungw_python}
+put /local/fungw/mod_dir {python}
+
+switch ?libs/script/python/presents
+	case {true}
+		put /local/fungw/mod_cflags libs/script/python/cflags
+		put /local/fungw/mod_ldflags libs/script/python/ldflags
+		put /local/fungw/mod_src {fungw_python.c}
+		include {Plugin.tmpasm}
+		end
+	default
+		include {Disable.tmpasm}
+		end
+end

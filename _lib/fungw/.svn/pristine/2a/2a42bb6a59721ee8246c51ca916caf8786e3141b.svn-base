@@ -1,0 +1,2 @@
+- BUG: duktape: syntax error in the script causes assert
+- check for memleaks (all languages)

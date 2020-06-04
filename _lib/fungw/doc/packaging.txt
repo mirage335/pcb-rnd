@@ -1,0 +1,75 @@
+This file contains recommendations for distro packagers. Please try
+to follow them as closely as possible so that fungw is packaged the same
+way on all distros. This will ease the life of users and developers who
+try to support users.
+
+Before packaging, please make sure you read lang.html - especially
+library versions. Some bindings will work only with a specific version
+of the scripting lib.
+
+1. For binary distros
+
+This applies if your packages are going to deliver precompiled binaries.
+
+There should be a core package, called libfungw. It should contain the
+files installed from trunk/libfungw. To get a list:
+	cd trunk
+	./configure --prefix=/usr
+	make
+	cd libfungw
+	make install DESTDIR=/tmp/foo
+	# then explore /tmp/foo
+
+libfungw should not depend on anything (but libc).
+
+There should be a separate package for each binding,
+called libfungw-BINDINGNAME, e.g. libfungw-lua. These packages
+should contain the .so files _and_ the puplug/* files installed
+by the package. (The above method should work in libfungwbind/*).
+
+libfgunw-c does not need a package.
+
+NOTE: the puplug/* files are essential: most applications will dynamic
+link these .so files using dlopen() through puplug - it will be the
+rare case that the .so files are directly linked with -l. If the puplug/*
+files are not in place, the package will be unusable for most apps.
+
+A binding package should depend on libfungw (same version!) and in most
+cases on 3rd party script lib (e.g. liblua).
+
+Please do not create bundled packages of selected bindings, rather stick
+to one package per directory.
+
+Optionally a metapackage should be created, called fungw, which installs:
+	libfungw
+	libfungw-fawk
+	libfungw-cli
+
+These are the packages that won't have external dependencies so would be
+cheap to install. Together they will provide at least 4 scripting languages.
+
+2. For source distros
+
+This applies if your packages are NOT going to deliver precompiled binaries,
+only sources and users of the package will always compile.
+
+The core is always compiled. Bindings can be disabled or enabled one by one.
+Please let the user decide which bindings to use. Each binding
+depends only on libfungw core and its own 3rd party scripting lib (except 
+for fawk and cli which won't have any external dependencies).
+
+Please do NOT make any scripting language mandatory: fungw works perfectly
+fine without python or perl or lua or whichever language is the popular one
+this week. Many users will prefer to use something less popular because they
+happen to know that language. Let the user pick which ones they are going to
+use, don't force them to install dependencies for a language they would never
+use.
+
+NOTE: ./configure is much smarter than the usual autotools stuff: it can
+automatically figure which languages are available on the users system and
+will enable bindings accordingly. This doesn't need any distro side
+help or scripting, it just happens any time the user runs ./configure.
+No need to pass configure parameters to explicitly enable or disable
+languages, it's enough to just install the right libs.
+
+It's probably a good idea to use --prefix=/usr for ./configure

@@ -1,0 +1,25 @@
+append /local/fungw/summary [~ ~/local/fungw/mod~::d~]
+put /local/fungw/mod_mak     [~~/local/fungw/mod_dir~/~/local/fungw/mod~.mak~]
+
+print [~
+# binding not configured
+
+all:
+
+clean:
+
+distclean:
+
+install:
+
+linstall:
+
+uninstall:
+
+~]
+
+redir /local/fungw/mod_mak
+
+print [~
+# binding not configured
+~]

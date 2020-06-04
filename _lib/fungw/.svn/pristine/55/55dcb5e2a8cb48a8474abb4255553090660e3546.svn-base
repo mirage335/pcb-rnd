@@ -1,0 +1,5 @@
+$desc python binding engine
+$state works
+default buildin
+autoload 0
+conflict python3

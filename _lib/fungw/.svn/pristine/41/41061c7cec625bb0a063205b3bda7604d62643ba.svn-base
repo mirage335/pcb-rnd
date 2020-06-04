@@ -1,0 +1,62 @@
+User call context
+~~~~~~~~~~~~~~~~~
+
+This is an optional feature, which is always available but is not always used.
+
+The application normally calls a function of an engine (e.g. a script)
+that will then often calls back an utility functions implemented in the
+application.
+
+The second callee, implemented in the app, may need to know in what application
+context the first call happened. A trivial way to do that would be to pass
+on an extra argument to the first call and then get the code there to pass it
+down to the second call. 
+
+But keep on passing such arguments, most often fully opaque to the the first
+call, results in boilerplate. On the other hand, this pattern is very common.
+So fungw has an optional feature for a more transparent handling of this,
+called the "user call context", or UCC for short.
+
+Each fungw arg is normally 2 pointers wide. This is the convenient size for
+hosting real wide types, such as long double. In a function call argv[0] is
+always a pointer to the fungw function being called. But this leaves the
+second pointer of argv[0] empty, and that is where UCC is stored. Thus in
+the calling convention:
+
+ - argv[0].val.argv0.func            is the (fgw_func_t *) function being called
+ - argv[0].val.argv0.user_call_ctx   is the (void *) UCC
+
+When UCC is not required, user_call_ctx is left NULL. On the caller side,
+the simple call API without 'u' in the name, such as fgw_scall() or
+fgw_vcall() will do that.
+
+If the application depends on UCC, it should initiate calls using the
+'u' version of the API, e.g. fgw_uscall() or fgw_uvcall().
+
+The fungw function called should do two things about this:
+
+ - if it is a function implemented by the app, it could retrieve the UCC from
+   argv[0].val.argv0.user_call_ctx
+ - if any fungw function calls further fungw functions, it should pass on
+   argv[0].val.argv0.user_call_ctx unchanged (except for app functions that
+   have a good reason to switch context)
+ - script engines are implemented in a way that the UCC is set as a global
+   object state while the (blocking) script function is running and any
+   call initiated from the script function will automatically set the UCC
+   from that state.
+
+The last implementation detail means UCC is incompatible with threading
+or async external event handling done by a script library. If the script
+library decides to run the script asynchronously, without the app starting
+the chain of calls, the UCC will be one of two values:
+
+ - if the script was not running at the moment: NULL
+ - if the script was running: the UCC value of the current function call
+   (which, from the app's point of view, when called back from the async
+   script function, is often a random/unrelated context)
+
+Generally speaking every call chain should originate in the application, with
+any threading and async event handling done by the application, keeping in
+mind that fungw objects have non-thread-local internal states.
+
+

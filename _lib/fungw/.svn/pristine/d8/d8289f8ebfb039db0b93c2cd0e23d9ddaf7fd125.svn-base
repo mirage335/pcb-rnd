@@ -1,0 +1,14 @@
+put /local/fungw/mod {fungw_mawk}
+put /local/fungw/mod_dir {mawk}
+
+switch ?libs/script/mawk/presents
+	case {true}
+		put /local/fungw/mod_cflags libs/script/mawk/cflags
+		put /local/fungw/mod_ldflags libs/script/mawk/ldflags
+		put /local/fungw/mod_src {fungw_mawk.c}
+		include {Plugin.tmpasm}
+		end
+	default
+		include {Disable.tmpasm}
+		end
+end

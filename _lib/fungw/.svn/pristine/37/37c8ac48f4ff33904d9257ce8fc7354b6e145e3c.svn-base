@@ -1,0 +1,4 @@
+$desc fawk binding engine
+$state works
+default buildin
+autoload 0

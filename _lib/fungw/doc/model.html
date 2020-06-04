@@ -1,0 +1,182 @@
+<html>
+<body>
+	<h1> Fungw - data model </h1>
+
+	<h2> contexts, objects, functions </h2>
+	<p>
+	The most important basic type is function (<i>fgw_func_t</i>).
+	A function has a return value and a flexible number of arguments.
+	The return value and arguments are all of <i>fgw_arg_t</i>, containing
+	a type and a value.
+	<p>
+	Functions are registered by name in a the hash table of the <i>fungw context.</i>
+	Functions are provided by uniquely named <i>objects</i> - a list
+	of available objects is also registered in the <i>fungw context.</i>
+	<p>
+	A <i>fungw context</i> is a collection of states that describes a full,
+	self contained configuration and state of a fungw instance. It can be
+	taken as an instance of a plugin system. An application can maintain
+	multiple independent <i>fungw contexts</i>, but the typical case is
+	that an application creates only one. <i>Fungw contexts</i> can be
+	created and discarded any time.
+	<p>
+	An <i>object</i> is a group of related functions and potentially opaque
+	internal states. Fungw is not object oriented in the sense that each
+	<i>object</i> is an independent entity in a flat list of objects and
+	there's no inheritance or other complex relationship between objects.
+	Each <i>object</i> has a name that is unique within the <i>fungw
+	context</i>. If the <i>object</i> has internal states, these states
+	can be accessed only through function calls the <i>object</i> provides.
+	<p>
+	<img src="model.png">
+	<p>
+	In the example drawn above, the application keeps two independent
+	fungw contexts: context1 (green, right) and context2 (green, left).
+	Each context hosts two objects (purple).
+	Context's obj1 is a fawk script that provides 3 functions (foo, bar and baz)
+	and has some internal states (fawk global variables). The other object
+	in context1 is implemented in lua. Context2 has a similar setup. Context2
+	<p>
+	Both context1 and context2 loaded hello.lua, but these are two
+	separate instances, because they are in two separate objects. Although
+	the object names match (obj2), the objects are in two separate contexts.
+	Thus the two instances of hello.lua will not share any lua code or
+	variables (but are loaded in memory as duplicates).
+	<p>
+	The application may call function fungw foo() within a context. If
+	it is called in context1, it's obj1, foo.awk's foo(). If it's called in
+	context2m it's obj1, bar.lua's foo(). Once a function is called  within
+	a context, it may do further calls, but those calls will always stay within
+	the same context.
+
+	<h2> engines </h2>
+	<p>
+	<i>Objects</i> are really instances of <i>engines</i>. An engine is
+	the actual implementation that is instantiated into an object. It can be
+	instantiated into multiple independent objects in the same or in multiple
+	<i>fungw contexts.</i> That means the code of an engine is shared by
+	all objects created from it, but data (states, variables) is unique to
+	the object.
+	<p>
+	An <i>engine</i> is a library that implements code that can be used
+	to create <i>object</i>. The implementation should be thread safe and
+	multi-instance, storing all internal state in a per object storage
+	allocated when the object is initialized. The engine implements and
+	registers all functions the object will expose to fungw.
+	<p>
+	For example a buddy allocator library is implemented as an <i>engine</i>.
+	The application, within an already initialized <i>fungw context</i>,
+	may create multiple <i>objects</i> that will be each an independent instance
+	of the buddy allocator, each controlling its own allocations, not knowing
+	about other instances.
+	<p>
+	Another typical example is script <i>engines</i>. The implementation
+	for loading and executing lua scripts is an <i>engine</i>. When the
+	application needs to load three different lua scripts, the <i>engine</i>
+	is called three times to register three <i>objects</i>. Each
+	<i>object</i> represents the full internal state of one of the scripts,
+	including the script code parsed, global variables and functions registered.
+	Different scripts may register different functions, so although the
+	<i>engine</i> was the same for all three <i>objects</i>, the actual API
+	(the functions exposed) may differ in each object.
+	<p>
+	On the above pictured example, two engines are used: fungw_fawk and
+	fungw_lua. These each implement their own (fawk or lua) scripting.
+	That means the engine has the code for the interpreter for the given
+	language, but no script. A script is loaded by creating a new object:
+	the object's code is provided by the engine, but data (the script) by the
+	script file. In the above example the lua engine is loaded only once,
+	although it creates 3 independent objects running separate lua scripts.
+
+
+	<h2 id="names"> function names </h2>
+	<p>
+	The function hash is a hash table in a <i>fungw context</i> that
+	lists all functions currently registered in the context, with enough
+	low level information that fungw can perform a call to the function.
+	<p>
+	Each public function is normally registered in the function hash by two
+	names: the globally unique <i>object_name.function_name</i> and the
+	non-unique short <i>function_name</i>. Since function names must be unique
+	within the hash, short name collisions need to be resolved.
+	<p>
+	Fungw applies a first-come-first-served method for selecting the short name:
+	the first object that tries to register the given short name will succeed,
+	subsequent requests with the same name are denied. When short name can not
+	be registered <i>object_name.function_name</i> is still registered, so the
+	function is accessible.
+	<p>
+	When a function is unregistered, the long name is removed from the hash.
+	If the short name in the hash corresponds to this function, it is also removed
+	and a substitution (another function with the same short name) is searched and
+	if found, inserted. If there are multiple candidates (registered in different
+	objects) for the substitutions, one is picked randomly.
+	<p>
+	This mechanism is designed so that callers do not need to know the name
+	of the object that provides a common function. Multiple objects can provide
+	the same function using the same name. When the caller uses a short name
+	of a function, the caller assumes the different implementations are
+	compatible.
+	<p>
+	On the above pictured example, when a single-call to baz() in context1
+	is done, only one of obj1's baz() or obj2's baz() is called. Which one
+	of the two is picked depends on the order of objects created. Such call
+	is useful if different objects implement the same functionality using
+	the same name so it doesn't matter which one is called - "call any
+	available implementation, just don't do it twice". When a specific
+	implementation is required, e.g. the application needs to one implemented
+	in hello.lua, obj2.baz() should be called. If both needs to be called
+	("call all implementations, in random order" - typical for delivering
+	events), fgw_*call_all() should be used.
+
+	<h2 id="calls"> function calls </h2>
+	<p>
+	A function has:
+	<ul>
+		<li> two <a href="#names">names</a>
+		<li> zero or more <b>input</b> arguments
+		<li> a return value
+		<li> a success indicator
+	</ul>
+	<p>
+	All arguments are input arguments because it would not be feasible
+	in every supported scripting language to use output arguments. The
+	return value is always present, but can be empty (a void pointer
+	with value of 0).
+	<p>
+	The number of arguments is not fixed. The caller may call the function
+	with any amount of arguments. The callee gets an argc/argv[] pair and can
+	decide if the call is valid, optionally looking at the number and type of
+	arguments.
+	<p>
+	Any function call may succeed or fail. Optionally the caller gets an
+	indication of this in the success indicator (accessible in C). When the
+	call fails, the return value is set to empty.
+	<p>
+	argv[0] contains a pointer to the fungw function being called
+	and optionally the <a href="user_call_ctx.txt">user_call_ctx</a>.
+
+	<h2 id="calls"> function call stack (threads and async) </h2>
+	<p>
+	Every call stack (or chain) should originate in the host application.
+	Which means it's generally the host application that is running first
+	and the first fungw call is always initiated by the application. In
+	other words, the main loop and handling external events (user input,
+	network events, I/O in general, timers, or anything async) should be
+	implemented by the application, not by fungw engines (e.g. scripts).
+	<p>
+	Especially any threading or async event handling done by the
+	application, keeping in mind that fungw objects have non-thread-local
+	internal states. If the application has threads, it is the application's
+	responsibility to make sure parallel instances of the same object is
+	never being executed. If an engine, e.g. a script language, implements
+	threading or async event handling, that should <b>not</b> be used with
+	fungw.
+
+	<h2> custom types </h2>
+	<p>
+	The application may extend the list of types supported by registering new,
+	<a href="custom_types.txt">custom types.</a>
+
+</body>
+</html>

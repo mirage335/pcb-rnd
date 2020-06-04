@@ -1,0 +1,13 @@
+put /local/fungw/mod {fungw_perl}
+put /local/fungw/mod_dir {perl}
+switch ?libs/script/perl/presents
+	case {true}
+		put /local/fungw/mod_cflags libs/script/perl/cflags
+		put /local/fungw/mod_ldflags libs/script/perl/ldflags
+		put /local/fungw/mod_src {fungw_perl.c}
+		include {Plugin.tmpasm}
+		end
+	default
+		include {Disable.tmpasm}
+		end
+end

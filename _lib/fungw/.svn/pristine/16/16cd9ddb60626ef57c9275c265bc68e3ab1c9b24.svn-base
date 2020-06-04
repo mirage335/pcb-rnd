@@ -1,0 +1,78 @@
+<html>
+<body>
+<h1> fungw language support </h1>
+<table border=1 cellspacing=0>
+<tr><th>language     <th> fungw plugin <th> state   <th> 3rd party software dependency <th> binding doc, comments
+<tr><td>C            <td> c            <td> works   <td> C89 and newer                 <td> n/a
+<tr><td>fawk         <td> fawk         <td> works   <td> <a href="#em">none</a>        <td> (an AWK dialect)
+<tr><td>BASIC        <td> fawk (fbas)  <td> works   <td> <a href="#em">none</a>        <td> (a modern BASIC dialect)
+<tr><td>pascal       <td> fawk (fpas)  <td> works   <td> <a href="#em">none</a>        <td> (a pascal script dialect)
+<tr><td>awk          <td> mawk         <td> works   <td> libmawk (svn r1206)           <td> n/a
+<tr><td>lua          <td> lua          <td> works   <td> liblua (5.1)                  <td> <a href="lang_lua.html"> available </a>
+<tr><td>tcl          <td> tcl          <td> works   <td> libtcl (8.5)                  <td> n/a
+<tr><td>javascript   <td> duktape      <td> works   <td> libduktape (2.0.2)            <td> n/a
+<tr><td>ruby         <td> mruby        <td> works   <td> libmruby (1.0.0)              <td> n/a
+<tr><td>perl         <td> perl         <td> works   <td> libperl (5.24.1)              <td> <a href="lang_perl.html"> available </a>
+<tr><td>lisp/scheme  <td> estutter     <td> works   <td> estutter (1.0.0)              <td> <a href="lang_estutter.html"> available </a>
+<tr><td>POSIX shell  <td> cli          <td> works   <td> bash (4.3) or dash (0.5.7)    <td> <a href="lang_sh.html"> available </a>
+<tr><td>lisp         <td> funlisp      <td> works   <td> funlisp (1.1.0)               <td> <a href="lang_funlisp.html"> available </a>
+<tr><td>python       <td> python       <td> works   <td> libpython (<b>2.6</b>)        <td> <a href="lang_python.html"> available </a>
+<tr><td>python3      <td> python3      <td> BUGGY   <td> libpython (3.7.3)             <td> <a href="lang_python3.html"> available </a>
+</table>
+<p>
+Note: a version number in the dependency column is only the version of the
+package fungw last worked with - other versions may work as well. Exception is
+when the version number is bold, in which case other versions will NOT work.
+
+<h1> languages that could be supported but probably won't be</h1>
+<table border=1 cellspacing=0>
+<tr><th>language     <th> last evaluated <th> reason
+<tr><td>scheme/guile <td> 2018-05        <td> guile is a major pain to configure and compile; the API is not friendly either; use estutter instead
+<tr><td>sigscheme    <td> 2018-05        <td> use estutter instead
+</table>
+
+
+<h1> languages that can not be supported </h1>
+<p>
+Some of these could be supported through the cli engine but they can
+not be supported natively for various reasons, described below.
+<p>
+<table border=1 cellspacing=0>
+<tr><th>language    <th> last evaluated <th> reason
+<tr><td>php         <td> 2018-05        <td> could not figure how to set up multiple instances of php script with php7.0 (see work/php); probably could be done with PH7, but that doesn't come with an installable lib
+<tr><td>erlang      <td> 2018-05        <td> does not have a C embeddable lib
+<tr><td>go          <td> 2018-05        <td> not interpreted, compiled
+<tr><td>haskell     <td> 2018-05        <td> not interpreted, compiled (would need FFI)
+<tr><td>Clojure     <td> 2018-05        <td> depends on JVM?
+<tr><td>Scala       <td> 2018-05        <td> depends on JVM?
+<tr><td>Groovy      <td> 2018-05        <td> depends on JVM?
+<tr><td>Rust        <td> 2018-05        <td> not interpreted, compiled
+<tr><td>F#          <td> 2018-05        <td> not interpreted, compiled
+<tr><td>Boo         <td> 2018-05        <td> does not have a C embeddable lib
+<tr><td>rep (lisp)  <td> 2018-05        <td> does not support multiple instances
+<tr><td>ecl (lisp)  <td> 2018-05        <td> does not support multiple instances
+<tr><td>gambc (lisp)<td> 2018-05        <td> does not support multiple instances
+<tr><td>elk (lisp)  <td> 2018-05        <td> does not support multiple instances
+<tr><td>scm (lisp)  <td> 2018-05        <td> does not support multiple instances
+<tr><td>scheme9     <td> 2018-05        <td> does not support multiple instances
+<tr><td>ixion       <td> 2018-05        <td> C++
+<tr><td>rexx        <td> 2018-05        <td> rexxsaa.h does not offer multiple script contexts, that would be mt.h (included from rexx.h) with tsd_t; but it seems rexx.h is usually not installed (from .deb or .rpm)
+<tr><td>pike7.8     <td> 2019-02        <td> stand alone interpreter, does not seem to have an API for embedding
+</table>
+
+<h1 id="em"> Special languages: embedded interpreters </h1>
+<p>
+<a href="http://repo.hu/projects/libfawk">Libfawk</a> provides an extremely
+small scripting language VM+compiler implementation with support for multiple
+languages. It is so small that the whole code
+is a single C file that is simply embedded in the fungw plugin. Libfawk
+is also pure C89, without any external dependency.
+<p>
+That means the fungw fawk plugin has no external dependency, because it
+contains both the scripting language code and the fungw binding. Since
+fungw can also be compiled without any external dependency, this means
+<b>there is at least one scripting language plugin that will always work,
+everywhere, wherever fungw can be installed, providing multiple languages.</b>
+
+</body>
+</html>

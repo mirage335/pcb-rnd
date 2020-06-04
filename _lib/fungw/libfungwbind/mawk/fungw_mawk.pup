@@ -1,0 +1,4 @@
+$desc mawk binding engine
+$state works
+default buildin
+autoload 0

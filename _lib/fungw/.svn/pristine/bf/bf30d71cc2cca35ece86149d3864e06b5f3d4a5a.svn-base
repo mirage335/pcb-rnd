@@ -1,0 +1,11 @@
+;; Public function; atoi() is provided by another objects through fungw
+(defun hello (how_many who)
+	(princln "hello" how_many who)
+	(princln "atoi:" (atoi "42"))
+	66
+)
+
+(princln "hello world from init" (atoi "33"))
+(fgw_func_reg "hello")
+
+

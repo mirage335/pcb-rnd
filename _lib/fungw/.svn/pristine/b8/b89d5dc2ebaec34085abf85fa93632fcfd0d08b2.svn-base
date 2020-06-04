@@ -1,0 +1,18 @@
+**TODO: document this **
+
+The implementation must respect the FGW_DYN type flag; in a multicall,
+the caller will make non-dynamic copies that shall never be free'd, even
+if the custom type sotres the payload as a separate allocation. In that
+case the non-dynamic copies will exist only as long as the dynamic parent
+copy exists (the caller gunaratees this) and they will all point to the
+same allocation. This also means a conversion to a different type
+shall not change the memory behind the allocation.
+
+
+When a custom type is requested to convert to FGW_AUTO, it needs to be
+converted to any base (non-custom) type. It is strongly recommended to pick
+a type from which the custom argument can be converted back, for full
+round trips. This feature is typically used by script bindings to convert
+incoming (e.g. function return) values to something the given script
+language can store. Safest bets are FGW_LONG and FGW_STR.
+

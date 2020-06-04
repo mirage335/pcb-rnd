@@ -1,0 +1,31 @@
+<html>
+<body>
+
+<h1> fungw language bindings - sh using cli </h1>
+
+<h2> datasheet </h2>
+<p>
+<table border=1 cellspacing=0>
+	<tr> <th> tested on
+		<td> Debian (bash, dash)
+	<tr> <th> known bugs/limitations
+		<td> data can not contain newlines; C function calls must be wrapped in a call to fgw; all data passed as string
+	<tr> <th> API stability
+		<td> stable but inconvenient due to the limitations of the method
+	<tr> <th> configuration requirements
+		<td> nothing special
+
+</table>
+
+<h2> Details </h2>
+<p>
+Function calls from the script to C must be wrapped in calls to
+local shell function fgw. For example, assuming there's a function
+called atoi, instead of <i>atoi 4</i> the script needs to call
+<i>fgw atoi 4</i>.
+<p>
+Because of the text protocol of the cli, all data passed between the
+script and the C program are converted to string.
+
+</body>
+</html>

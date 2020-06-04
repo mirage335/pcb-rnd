@@ -1,0 +1,14 @@
+put /local/fungw/mod {fungw_lua}
+put /local/fungw/mod_dir {lua}
+
+switch ?libs/script/lua/presents
+	case {true}
+		put /local/fungw/mod_cflags libs/script/lua/cflags
+		put /local/fungw/mod_ldflags libs/script/lua/ldflags
+		put /local/fungw/mod_src {fungw_lua.c}
+		include {Plugin.tmpasm}
+		end
+	default
+		include {Disable.tmpasm}
+		end
+end

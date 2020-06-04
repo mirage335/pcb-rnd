@@ -1,0 +1,40 @@
+print [~
+all: test test_c test_custom test_script
+
+# when fungw is installed, this should be /usr/lib/puplug/
+FUNGWBIND=../libfungwbind
+include $(FUNGWBIND)/libfungwbind.mak
+
+CFLAGS = ~/local/fungw/cflags~ ~/target/cc/fpic~  -I.. -I../src_3rd
+LDFLAGS = ~/local/fungw/ldflags~ ~/target/cc/fpic~
+LIBS = ../src_3rd/genht/genht_std.a $(FUNGWBIND_SRCLIBA)
+LIB_FGW = fgw_string.o ../libfungw/libfungw.a $(FUNGWBIND)/c/fungw_c.o
+LDLIBS = $(FUNGWBIND_LDLIBS) -lm
+
+test: test.o $(LIB_FGW) $(ENGINES) $(LIBS)
+
+test_c: test_c.o $(LIB_FGW) $(ENGINES) $(LIBS)
+
+test_custom: test_custom.o $(LIB_FGW) $(ENGINES) $(LIBS)
+
+test_script: test_script.o hello.o $(LIB_FGW) $(ENGINES) $(LIBS)
+
+../src_3rd/genht/genht_std.a:
+	cd ../src_3rd/genht && make genht_std.a
+
+test.o: test.c
+
+test_script.o: test_script.c static_lang.c
+
+fgw_string.o: fgw_string.c
+
+hello.o: hello.c
+
+clean:
+	-rm test test_c test_custom test_script \
+	    hello.o fgw_string.o test.o test_custom.o test_c.o test_script.o
+
+distclean: clean
+	-rm static_lang.c Makefile
+
+~]

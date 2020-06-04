@@ -1,0 +1,14 @@
+put /local/fungw/mod {fungw_funlisp}
+put /local/fungw/mod_dir {funlisp}
+
+switch ?libs/script/funlisp/presents
+	case {true}
+		put /local/fungw/mod_cflags libs/script/funlisp/cflags
+		put /local/fungw/mod_ldflags libs/script/funlisp/ldflags
+		put /local/fungw/mod_src {fungw_funlisp.c}
+		include {Plugin.tmpasm}
+		end
+	default
+		include {Disable.tmpasm}
+		end
+end

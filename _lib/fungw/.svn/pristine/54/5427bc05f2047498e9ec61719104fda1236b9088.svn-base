@@ -1,0 +1,14 @@
+put /local/fungw/mod {fungw_mruby}
+put /local/fungw/mod_dir {mruby}
+
+switch ?libs/script/mruby/presents
+	case {true}
+		put /local/fungw/mod_cflags libs/script/mruby/cflags
+		put /local/fungw/mod_ldflags libs/script/mruby/ldflags
+		put /local/fungw/mod_src {fungw_mruby.c}
+		include {Plugin.tmpasm}
+		end
+	default
+		include {Disable.tmpasm}
+		end
+end

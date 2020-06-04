@@ -1,0 +1,28 @@
+<html>
+<body>
+
+<h1> fungw language bindings - estutter </h1>
+
+<h2> datasheet </h2>
+<p>
+<table border=1 cellspacing=0>
+	<tr> <th> tested on
+		<td> Debian (<a href="http://repo.hu/projects/estutter"> estutter </a> 1.0.0)
+	<tr> <th> known bugs/limitations
+		<td> none
+	<tr> <th> API stability
+		<td> <b>stable</b> (we also have full control over the estutter project so fungw support is likely to remain stable for long)
+	<tr> <th> configuration requirements
+		<td> nothing special
+
+</table>
+
+<h2> Details </h2>
+<p>
+estutter is a medium complexity lisp-like interpreter implemented in about
+9k sloc. The language is inspired by and supports elements of common lisp
+and elements of scheme. Despite of its small size, it features a lot of advanced
+concepts, like OOP, CLOS, customizable I/O streams, SETF.
+
+</body>
+</html>

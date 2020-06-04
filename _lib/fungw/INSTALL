@@ -1,0 +1,38 @@
+0. Requirements
+ 
+ - C compiler (that supports C89)
+ - make (does not have to be GNU)
+ - optional: scripting language libs, see doc/lang.html
+
+1. configure
+
+ Run ./configure
+
+ You may want to specify the prefix, e.g. --prefix=/usr
+
+ ./configure will automatically detect and enable scripting with
+ libs found on the system. There is no --with or --without arguments.
+ If a language is not enabled, the lib is not found or is not suitable
+ (check the version)
+
+2. compile
+
+ Run make
+
+3. test
+
+ At the moment there's no automated testing. The most common thing to
+ test is scripts. For that, before installation:
+
+ cd example
+ SCRIPT=hello.fawk ./test_script
+
+ The script name determines the language used. All script output shall be
+ the same, except for the 'Set up' line that differs in language and file name.
+
+4. installation
+
+ Run make install
+
+ For packaging, DESTDIR is supported.
+

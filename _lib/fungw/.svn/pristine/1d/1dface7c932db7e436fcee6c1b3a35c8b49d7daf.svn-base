@@ -1,0 +1,13 @@
+put /local/fungw/mod {fungw_estutter}
+put /local/fungw/mod_dir {estutter}
+switch ?libs/script/estutter/presents
+	case {true}
+		put /local/fungw/mod_cflags libs/script/estutter/cflags
+		put /local/fungw/mod_ldflags libs/script/estutter/ldflags
+		put /local/fungw/mod_src {fungw_estutter.c}
+		include {Plugin.tmpasm}
+		end
+	default
+		include {Disable.tmpasm}
+		end
+end

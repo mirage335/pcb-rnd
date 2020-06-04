@@ -1,0 +1,27 @@
+<html>
+<body>
+
+<h1> fungw language bindings - python </h1>
+
+<h2> datasheet </h2>
+<p>
+<table border=1 cellspacing=0>
+	<tr> <th> tested on
+		<td> Debian (python 2.6)
+	<tr> <th> known bugs/limitations
+		<td> will fail with anything higher than 2.6
+	<tr> <th> API stability
+		<td> <a href="#api">low</a>
+	<tr> <th> configuration requirements
+		<td> n/a
+
+</table>
+
+<h2> Details </h2>
+<p>
+Python 2.6 produces a lot of invalid memory handling even on a simple
+init/uninit sequence, when debugged with valgrind. 2.7 crashes on the same
+sequence. It's not recommended to use python.
+
+</body>
+</html>
