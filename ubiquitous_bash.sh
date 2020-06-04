@@ -16632,6 +16632,22 @@ _setup_prog() {
 
 ##### Core
 
+# ATTENTION: Overload with 'ops.sh' or similar.
+_pcb-rnd() {
+	if type pcb-rnd > /dev/null 2>&1
+	then
+		pcb-rnd "$@"
+		return
+	fi
+	
+	"$scriptLib"/pcb-rnd-2.2.1/src/pcb-rnd "$@"
+	return
+}
+# _pcb-rnd() {
+# 	"$scriptLib"/pcb-rnd-2.2.1/src/pcb-rnd "$@"
+# 	return
+# }
+
 
 _test_build-app_pcb-rnd() {
 	_getDep /usr/include/glib-2.0/glib.h
@@ -16682,7 +16698,7 @@ _build-app_pcb-rnd_genht() {
 	cd "$scriptLib"/genht
 	
 	make -j$(nprocs)
-	sudo make install
+	sudo -n make install
 	
 	cd "$scriptLib"
 	return 0
@@ -16704,11 +16720,11 @@ _build-app_pcb-rnd_fungw() {
 	
 	
 	
-	cd "$scriptLib"/fungw-1.0.0
+	cd "$scriptLib"/fungw
 	
 	./configure
 	make -j 4
-	sudo make install
+	sudo -n make install
 	
 	cd "$scriptLib"
 	return 0
@@ -16729,6 +16745,9 @@ _build-app_pcb-rnd() {
 	
 	make -j$(nproc)
 	
+	# WARNING: May be unnecessary, and may cause conflicts with distro package.
+	# WARNING: Not adequately tested - "make uninstall" .
+	#sudo -n make install
 	
 	cd "$scriptLib"
 	return 0

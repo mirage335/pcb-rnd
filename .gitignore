@@ -108,3 +108,27 @@ _local/templates
 **/.config/Atom/Cookies*
 **/.config/Atom/IndexedDB/
 
+
+
+# Unusual. Require forced addition of builds and binaries, due to expected non-portability .
+# Unusual. Alternative approach op performing builds in temporary directories not used.
+
+_lib/fungw**
+_lib/genht**
+_lib/pcb-rnd**
+
+_lib/fungw**/*.o
+_lib/fungw**/*.a
+_lib/fungw**/*.so
+_lib/fungw**/*.so*
+
+_lib/genht**/*.o
+_lib/genht**/*.a
+_lib/genht**/*.so
+_lib/genht**/*.so*
+
+_lib/pcb-rnd**/*.o
+_lib/pcb-rnd**/*.a
+_lib/pcb-rnd**/*.so
+_lib/pcb-rnd**/*.so*
+
