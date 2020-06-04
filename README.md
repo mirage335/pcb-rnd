@@ -4,9 +4,14 @@ See license.txt for pcb-rnd license conditions.
 
 # Usage
 
+./_ubiquitous_bash _setup
+./_ubiquitous_bash _anchor
+
+./_pcb-rnd
 
 # Design
 
+Specifically intended to support DSN and SES file import and export for autorouting by Freerouting .
 
 # Safety
 
