@@ -7,7 +7,6 @@ _pcb-rnd() {
 		pcb-rnd "$@"
 		return
 	fi
-	
 	"$scriptLib"/pcb-rnd-2.2.1/src/pcb-rnd "$@"
 	return
 }
@@ -119,6 +118,11 @@ _build-app_pcb-rnd() {
 	
 	cd "$scriptLib"
 	return 0
+}
+
+
+_refresh_anchors() {
+	cp -a "$scriptAbsoluteFolder"/_anchor "$scriptAbsoluteFolder"/_pcb-rnd
 }
 
 

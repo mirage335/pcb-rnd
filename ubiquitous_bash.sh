@@ -16586,11 +16586,11 @@ _package() {
 # No need to rebuild if a valid system installation exists.
 # WARNING: Distribution version might not supply essential features.
 _accept_system-pcb-rnd() {
-	_wantGetDep pcb-rnd && return 0
+	_wantGetDep /usr/bin/pcb-rnd && return 0
+	type 'pcb-rnd' && _wantGetDep pcb-rnd && return 0
 	return 1
 }
 # _accept_system-pcb-rnd() {
-# 	#_wantGetDep pcb-rnd && return 0
 # 	return 1
 # }
 
@@ -16610,6 +16610,7 @@ _test_build_prog() {
 _testBuilt_prog() {
 	_accept_system-pcb-rnd && return 0
 	
+	# ATTENTION: Disable ONLY for development testing purposes.
 	# Limited test of self-built PCB binary.
 	# CAUTION: Copying to an alternate distro or otherwise possibly binary incompatible system may allow possibility of untested failures!
 	if [[ -e "$scriptLib"/pcb-rnd-2.2.1/src/pcb-rnd ]] && "$scriptLib"/pcb-rnd-2.2.1/src/pcb-rnd --help > /dev/null 2>&1
@@ -16639,7 +16640,6 @@ _pcb-rnd() {
 		pcb-rnd "$@"
 		return
 	fi
-	
 	"$scriptLib"/pcb-rnd-2.2.1/src/pcb-rnd "$@"
 	return
 }
@@ -16751,6 +16751,11 @@ _build-app_pcb-rnd() {
 	
 	cd "$scriptLib"
 	return 0
+}
+
+
+_refresh_anchors() {
+	cp -a "$scriptAbsoluteFolder"/_anchor "$scriptAbsoluteFolder"/_pcb-rnd
 }
 
 
